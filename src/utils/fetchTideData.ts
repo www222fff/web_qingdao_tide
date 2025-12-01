@@ -68,8 +68,8 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
             if (!daysMap[date]) daysMap[date] = [];
             daysMap[date].push({ time, height: heights[idx] });
         });
-        // 只取前3天
-        const dayKeys = Object.keys(daysMap).slice(0, 3);
+        // 取前7天
+        const dayKeys = Object.keys(daysMap).slice(0, 7);
         const result: TideDay[] = dayKeys.map(date => {
             const dayArr = daysMap[date];
             const dayHeights = dayArr.map(d => d.height);

@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import { TideData } from '../types/tide';
-import { lunar } from "lunar-javascript";
 import { Solar } from "lunar-javascript";
 
 interface TideChartProps {

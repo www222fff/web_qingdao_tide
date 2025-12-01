@@ -135,10 +135,11 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
 
         const animate = () => {
             const currentTime = Date.now();
-            animationRef.current = (currentTime - startTime) / 50; // Update offset based on time
+            animationRef.current = (currentTime - startTime) / 30; // Faster animation for visible wave flow
 
-            if (chartRef.current) {
-                chartRef.current.chart?.update('none'); // Update without animation delay
+            if (chartRef.current && chartRef.current.chart) {
+                // Force chart redraw with pattern animation
+                chartRef.current.chart.draw();
             }
 
             animationFrameRef.current = requestAnimationFrame(animate);

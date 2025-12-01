@@ -25,14 +25,16 @@ function getLunarDateStr(solarDate: string): string {
         const solar = Solar.fromYmd(year, month, day);
         const lunar = solar.getLunar();
 
-        const lunarMonth = lunar.getMonthInChinese();
-        const lunarDay = lunar.getDayInChinese();
+        const lunarMonth = lunar.getMonthInChinese(); // 例如 "十月"
+        const lunarDay = lunar.getDayInChinese();     // 例如 "十三"
+
         return `${lunarMonth}${lunarDay}`;
     } catch (e) {
         console.error('Error converting lunar date:', solarDate, e);
         return '';
     }
 }
+
 
 // Create sand pattern with footprints
 function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height: number) {

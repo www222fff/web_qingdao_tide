@@ -173,65 +173,126 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
         ],
     };
 
-    // Plugin to draw patterns following the tide curve
+    // Plugin to draw patterns following the tide curve with animation
     const patternPlugin = {
         id: 'patternPlugin',
         afterDatasetsDraw(chart: any) {
             const ctx = chart.ctx;
             const chartArea = chart.chartArea;
             const yScale = chart.scales.y;
-            const xScale = chart.scales.x;
 
-            // Get the dataset
-            const dataset = chart.data.datasets[0];
+            // Get the dataset meta
             const meta = chart.getDatasetMeta(0);
 
             // Save context state
             ctx.save();
 
-            // Draw water pattern below the curve with animation
-            const waterPattern = createWaterPattern(ctx, chartArea.width, chartArea.height, animationRef.current);
-            if (waterPattern) {
-                ctx.fillStyle = waterPattern;
-                ctx.beginPath();
-                ctx.moveTo(chartArea.left, chartArea.bottom);
+            // Create path for water area (below the curve)
+            ctx.beginPath();
+            ctx.moveTo(chartArea.left, chartArea.bottom);
 
-                // Trace along the curve
-                for (let i = 0; i < data.length; i++) {
-                    const point = meta.data[i];
-                    if (point) {
-                        ctx.lineTo(point.x, point.y);
-                    }
+            // Trace along the curve
+            for (let i = 0; i < data.length; i++) {
+                const point = meta.data[i];
+                if (point) {
+                    ctx.lineTo(point.x, point.y);
                 }
-
-                // Close the path at the bottom
-                ctx.lineTo(chartArea.right, chartArea.bottom);
-                ctx.closePath();
-                ctx.fill();
             }
 
-            // Draw sand pattern above the curve
-            const sandPattern = createSandPattern(ctx, chartArea.width, chartArea.height);
-            if (sandPattern) {
-                ctx.fillStyle = sandPattern;
-                ctx.beginPath();
-                ctx.moveTo(chartArea.left, chartArea.top);
+            // Close the path at the bottom
+            ctx.lineTo(chartArea.right, chartArea.bottom);
+            ctx.closePath();
 
-                // Trace along the curve
-                for (let i = 0; i < data.length; i++) {
-                    const point = meta.data[i];
-                    if (point) {
-                        ctx.lineTo(point.x, point.y);
+            // Clip to water region and draw animated water
+            ctx.clip();
+
+            // Draw base water color
+            ctx.fillStyle = '#3A8DFF';
+            ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
+
+            // Draw animated wave lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            const waveOffsetX = animationRef.current * 3;
+
+            // Main wave layers
+            for (let waveIndex = 0; waveIndex < 5; waveIndex++) {
+                ctx.beginPath();
+
+                const baseY = chartArea.top + 20 + waveIndex * 35;
+                const waveFrequency = 0.02 + waveIndex * 0.004;
+                const waveAmplitude = 8 + waveIndex * 2;
+
+                for (let x = chartArea.left - 50; x < chartArea.right + 50; x += 2) {
+                    const wave = Math.sin((x - waveOffsetX) * waveFrequency) * waveAmplitude;
+                    const y = baseY + wave;
+
+                    if (x === chartArea.left - 50) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
                     }
                 }
+                ctx.stroke();
+            }
 
-                // Close the path at the top
-                ctx.lineTo(chartArea.right, chartArea.top);
-                ctx.closePath();
-                ctx.fill();
+            // Secondary waves for depth
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1.5;
+
+            for (let waveIndex = 0; waveIndex < 3; waveIndex++) {
+                ctx.beginPath();
+
+                const baseY = chartArea.top + 50 + waveIndex * 50;
+                const waveFrequency = 0.015;
+                const waveAmplitude = 5;
+
+                for (let x = chartArea.left - 50; x < chartArea.right + 50; x += 3) {
+                    const wave = Math.sin((x - waveOffsetX * 0.7) * waveFrequency + waveIndex) * waveAmplitude;
+                    const y = baseY + wave;
+
+                    if (x === chartArea.left - 50) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
             }
 
             // Restore context state
+            ctx.restore();
+
+            // Draw sand pattern above the curve
+            ctx.save();
+
+            // Create path for sand area (above the curve)
+            ctx.beginPath();
+            ctx.moveTo(chartArea.left, chartArea.top);
+
+            // Trace along the curve
+            for (let i = 0; i < data.length; i++) {
+                const point = meta.data[i];
+                if (point) {
+                    ctx.lineTo(point.x, point.y);
+                }
+            }
+
+            // Close the path at the top
+            ctx.lineTo(chartArea.right, chartArea.top);
+            ctx.closePath();
+            ctx.clip();
+
+            // Draw sand
+            const sandPattern = createSandPattern(ctx, chartArea.width, chartArea.height);
+            if (sandPattern) {
+                ctx.fillStyle = sandPattern;
+                ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
+            }
+
             ctx.restore();
         }
     };

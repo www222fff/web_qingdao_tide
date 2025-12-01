@@ -46,8 +46,8 @@ const IndexPage: React.FC = () => {
             <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',fontWeight:'bold',fontSize:16,marginBottom:8,color:'#1a5490'}}>
                 Tide Height (m)
             </div>
-            <h1 style={{textAlign:'center',color:'#1a5490'}}>青岛未来两天潮汐数据</h1>
-            {tideDays.slice(0, 2).map((day, idx) => { // 只显示前两天
+            <h1 style={{textAlign:'center',color:'#1a5490'}}>青岛未来一周潮汐数据</h1>
+            {tideDays.slice(0, 7).map((day, idx) => { // 显示前七天
                 const tideType = day.type;
                 return (
                     <div key={day.date}>
@@ -63,7 +63,6 @@ const IndexPage: React.FC = () => {
             })}
             {/* 三个实时图像分区，地点为石老人、栈桥、小麦岛 */}
             <div style={{ height: 24 }} />
-            <h2 style={{color:'#1a5490',marginTop:40,marginBottom:24,textAlign:'center',fontSize:20,fontWeight:'bold'}}>实时图像</h2>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32, gap: '12px' }}>
                 {camImgUrls.map((url, idx) => (
                     <div key={idx} style={{ flex: 1, textAlign: 'center' }}>

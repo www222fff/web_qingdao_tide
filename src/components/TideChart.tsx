@@ -111,8 +111,12 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
             // Clip to water region and draw animated water
             ctx.clip();
 
-            // Draw base water color only
-            ctx.fillStyle = '#3A8DFF';
+            // Draw base water color with light blue gradient
+            const waterGradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            waterGradient.addColorStop(0, '#A8D8F2');
+            waterGradient.addColorStop(0.5, '#7AC5E8');
+            waterGradient.addColorStop(1, '#5AB8E0');
+            ctx.fillStyle = waterGradient;
             ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
 
             // Restore context state

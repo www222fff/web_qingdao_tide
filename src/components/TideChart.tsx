@@ -49,8 +49,8 @@ function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height:
     return patternCtx.createPattern(canvas, 'repeat');
 }
 
-// Create water pattern with waves
-function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height: number) {
+// Create water pattern with animated waves
+function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height: number, animationOffset: number = 0) {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -58,22 +58,47 @@ function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height
 
     if (!patternCtx) return null;
 
-    // Water base
-    patternCtx.fillStyle = '#3A8DFF';
+    // Water base with subtle gradient
+    const waterGradient = patternCtx.createLinearGradient(0, 0, 0, height);
+    waterGradient.addColorStop(0, '#4A9FFF');
+    waterGradient.addColorStop(0.5, '#3A8DFF');
+    waterGradient.addColorStop(1, '#2870E8');
+    patternCtx.fillStyle = waterGradient;
     patternCtx.fillRect(0, 0, width, height);
 
-    // Add wave pattern
-    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    patternCtx.lineWidth = 1.5;
+    // Add animated wave pattern
+    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    patternCtx.lineWidth = 2;
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
         patternCtx.beginPath();
         const startX = -20;
-        const startY = i * 30;
+        const startY = i * 25;
         patternCtx.moveTo(startX, startY);
 
-        for (let x = startX; x < width + 20; x += 10) {
-            const y = startY + Math.sin((x + startY) * 0.05) * 8;
+        for (let x = startX; x < width + 20; x += 8) {
+            const phase = (x + animationOffset) * 0.08 + i * 0.5;
+            const waveAmount = Math.sin(phase) * 10 + Math.cos(phase * 0.5) * 5;
+            const y = startY + waveAmount;
+            patternCtx.lineTo(x, y);
+        }
+        patternCtx.stroke();
+    }
+
+    // Add lighter wave highlights
+    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    patternCtx.lineWidth = 1;
+
+    for (let i = 0; i < 3; i++) {
+        patternCtx.beginPath();
+        const startX = -20;
+        const startY = i * 40 + 50;
+        patternCtx.moveTo(startX, startY);
+
+        for (let x = startX; x < width + 20; x += 12) {
+            const phase = (x + animationOffset) * 0.06 + i * 0.3;
+            const waveAmount = Math.sin(phase + i) * 6;
+            const y = startY + waveAmount;
             patternCtx.lineTo(x, y);
         }
         patternCtx.stroke();

@@ -77,7 +77,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     };
 
     return (
-        <div style={{ margin: '32px 0', padding: 12, border: '1px solid #eee', borderRadius: 8, background: 'linear-gradient(180deg, #F7E7B4 0%, #fff 40%, #E3F2FD 100%)' }}></div>
+        <div style={{ margin: '32px 0', padding: 12, border: '1px solid #eee', borderRadius: 8, background: 'linear-gradient(180deg, #F7E7B4 0%, #fff 40%, #E3F2FD 100%)' }}>
             {/* 日期和汛型并排，左上角显示 */}
             {date && (
                 <div style={{ fontWeight: 'bold', fontSize: 18, display: 'flex', alignItems: 'center' }}>

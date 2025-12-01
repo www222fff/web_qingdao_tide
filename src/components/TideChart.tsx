@@ -206,62 +206,9 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
             // Clip to water region and draw animated water
             ctx.clip();
 
-            // Draw base water color
+            // Draw base water color only
             ctx.fillStyle = '#3A8DFF';
             ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
-
-            // Draw animated wave lines
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-
-            const waveOffsetX = animationRef.current * 3;
-
-            // Main wave layers
-            for (let waveIndex = 0; waveIndex < 5; waveIndex++) {
-                ctx.beginPath();
-
-                const baseY = chartArea.top + 20 + waveIndex * 35;
-                const waveFrequency = 0.02 + waveIndex * 0.004;
-                const waveAmplitude = 8 + waveIndex * 2;
-
-                for (let x = chartArea.left - 50; x < chartArea.right + 50; x += 2) {
-                    const wave = Math.sin((x - waveOffsetX) * waveFrequency) * waveAmplitude;
-                    const y = baseY + wave;
-
-                    if (x === chartArea.left - 50) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-                ctx.stroke();
-            }
-
-            // Secondary waves for depth
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.lineWidth = 1.5;
-
-            for (let waveIndex = 0; waveIndex < 3; waveIndex++) {
-                ctx.beginPath();
-
-                const baseY = chartArea.top + 50 + waveIndex * 50;
-                const waveFrequency = 0.015;
-                const waveAmplitude = 5;
-
-                for (let x = chartArea.left - 50; x < chartArea.right + 50; x += 3) {
-                    const wave = Math.sin((x - waveOffsetX * 0.7) * waveFrequency + waveIndex) * waveAmplitude;
-                    const y = baseY + wave;
-
-                    if (x === chartArea.left - 50) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-                ctx.stroke();
-            }
 
             // Restore context state
             ctx.restore();

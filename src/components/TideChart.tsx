@@ -109,6 +109,8 @@ function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height
 
 const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     const chartRef = useRef<any>(null);
+    const animationRef = useRef<number>(0);
+    const animationFrameRef = useRef<number | null>(null);
 
     // 提取所有高潮和低潮时间
     const highTides = data.filter(d => d.type === '高潮');
@@ -116,6 +118,30 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
 
     const sandColor = '#FFFFFF'; // 沙滩色（白色）
     const seaColor = '#3A8DFF'; // 海水蓝色
+
+    // Animation loop for water waves
+    useEffect(() => {
+        let startTime = Date.now();
+
+        const animate = () => {
+            const currentTime = Date.now();
+            animationRef.current = (currentTime - startTime) / 50; // Update offset based on time
+
+            if (chartRef.current) {
+                chartRef.current.chart?.update('none'); // Update without animation delay
+            }
+
+            animationFrameRef.current = requestAnimationFrame(animate);
+        };
+
+        animationFrameRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+        };
+    }, []);
 
     const chartData = {
         labels: data.map(d => formatTime(d.time)),

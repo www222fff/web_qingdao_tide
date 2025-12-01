@@ -49,78 +49,8 @@ function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height:
     return patternCtx.createPattern(canvas, 'repeat');
 }
 
-// Create water pattern with animated flowing waves
-function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height: number, animationOffset: number = 0) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 200; // Fixed size for pattern
-    canvas.height = height;
-    const patternCtx = canvas.getContext('2d');
-
-    if (!patternCtx) return null;
-
-    // Water base
-    patternCtx.fillStyle = '#3A8DFF';
-    patternCtx.fillRect(0, 0, canvas.width, height);
-
-    // Draw multiple wave lines with flowing animation
-    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-    patternCtx.lineWidth = 2.5;
-    patternCtx.lineCap = 'round';
-    patternCtx.lineJoin = 'round';
-
-    // Main wave layers
-    for (let waveIndex = 0; waveIndex < 5; waveIndex++) {
-        patternCtx.beginPath();
-
-        const baseY = 20 + waveIndex * 35;
-        const waveFrequency = 0.02 + waveIndex * 0.004;
-        const waveAmplitude = 8 + waveIndex * 2;
-
-        for (let x = 0; x < canvas.width + 50; x += 2) {
-            // Create flowing wave with animation offset
-            const wave = Math.sin((x - animationOffset * 3) * waveFrequency) * waveAmplitude;
-            const y = baseY + wave;
-
-            if (x === 0) {
-                patternCtx.moveTo(x, y);
-            } else {
-                patternCtx.lineTo(x, y);
-            }
-        }
-        patternCtx.stroke();
-    }
-
-    // Add subtle secondary waves for depth
-    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-    patternCtx.lineWidth = 1.5;
-
-    for (let waveIndex = 0; waveIndex < 3; waveIndex++) {
-        patternCtx.beginPath();
-
-        const baseY = 50 + waveIndex * 50;
-        const waveFrequency = 0.015;
-        const waveAmplitude = 5;
-
-        for (let x = 0; x < canvas.width + 50; x += 3) {
-            const wave = Math.sin((x - animationOffset * 2) * waveFrequency + waveIndex) * waveAmplitude;
-            const y = baseY + wave;
-
-            if (x === 0) {
-                patternCtx.moveTo(x, y);
-            } else {
-                patternCtx.lineTo(x, y);
-            }
-        }
-        patternCtx.stroke();
-    }
-
-    return patternCtx.createPattern(canvas, 'repeat');
-}
-
 const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     const chartRef = useRef<any>(null);
-    const animationRef = useRef<number>(0);
-    const animationFrameRef = useRef<number | null>(null);
 
     // 提取所有高潮和低潮时间
     const highTides = data.filter(d => d.type === '高潮');
@@ -128,31 +58,6 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
 
     const sandColor = '#FFFFFF'; // 沙滩色（白色）
     const seaColor = '#3A8DFF'; // 海水蓝色
-
-    // Animation loop for water waves
-    useEffect(() => {
-        let startTime = Date.now();
-
-        const animate = () => {
-            const currentTime = Date.now();
-            animationRef.current = (currentTime - startTime) / 30; // Faster animation for visible wave flow
-
-            if (chartRef.current && chartRef.current.chart) {
-                // Force chart redraw with pattern animation
-                chartRef.current.chart.draw();
-            }
-
-            animationFrameRef.current = requestAnimationFrame(animate);
-        };
-
-        animationFrameRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (animationFrameRef.current) {
-                cancelAnimationFrame(animationFrameRef.current);
-            }
-        };
-    }, []);
 
     const chartData = {
         labels: data.map(d => formatTime(d.time)),

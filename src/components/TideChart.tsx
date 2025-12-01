@@ -227,7 +227,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
             {/* 日期和汛型并排，左上角显示 */}
             {date && (
                 <div style={{ fontWeight: 'bold', fontSize: 18, display: 'flex', alignItems: 'center', color: '#333' }}>
-                    <span>{date}</span>
+                    <span>{date} ({getLunarDateStr(date)})</span>
                     {children && <span style={{ marginLeft: 12 }}>{children}</span>}
                 </div>
             )}

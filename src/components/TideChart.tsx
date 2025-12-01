@@ -98,35 +98,12 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
             {
                 label: 'Tide Height (m)',
                 data: data.map(d => d.height),
-                borderColor: '#2C7FD9',
-                borderWidth: 2,
-                backgroundColor: function(context: any) {
-                    const ctx = context.chart.ctx;
-                    const chartArea = context.chart.chartArea;
-
-                    if (!chartArea) return seaColor;
-
-                    // Get the yAxis scale
-                    const yScale = context.chart.scales.y;
-                    const zeroPixel = yScale.getPixelForValue(0);
-
-                    // Create gradient
-                    const gradient = ctx.createLinearGradient(0, 0, 0, chartArea.bottom);
-
-                    // Map colors based on zero line position
-                    const zeroPercent = (zeroPixel - chartArea.top) / (chartArea.bottom - chartArea.top);
-
-                    // Above zero (sand), below zero (water)
-                    gradient.addColorStop(0, sandColor);
-                    gradient.addColorStop(Math.max(0, zeroPercent - 0.05), sandColor);
-                    gradient.addColorStop(Math.min(1, zeroPercent + 0.05), seaColor);
-                    gradient.addColorStop(1, seaColor);
-
-                    return gradient;
-                },
+                borderColor: '#1a5490',
+                borderWidth: 3,
+                backgroundColor: 'rgba(58, 141, 255, 0.15)',
                 fill: true,
                 pointRadius: data.map(d => d.type ? 6 : 2),
-                pointBackgroundColor: data.map(d => d.type === '高潮' ? 'red' : d.type === '低潮' ? 'green' : '#2C7FD9'),
+                pointBackgroundColor: data.map(d => d.type === '高潮' ? '#ff4444' : d.type === '低潮' ? '#00cc00' : '#2C7FD9'),
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 tension: 0.4,

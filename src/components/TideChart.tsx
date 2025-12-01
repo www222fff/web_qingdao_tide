@@ -92,10 +92,6 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     const sandColor = '#F7E7B4'; // 沙滩色
     const seaColor = '#3A8DFF'; // 海水蓝色
 
-    // Calculate min and max for gradient positioning
-    const minHeight = Math.min(...data.map(d => d.height));
-    const maxHeight = Math.max(...data.map(d => d.height));
-
     const chartData = {
         labels: data.map(d => formatTime(d.time)),
         datasets: [

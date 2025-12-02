@@ -104,8 +104,8 @@ export class TideChartRenderer {
   }
 
   private drawAxes(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = '#999';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
 
     ctx.beginPath();
     ctx.moveTo(this.config.padding, this.config.height - this.config.padding);
@@ -119,24 +119,30 @@ export class TideChartRenderer {
 
     ctx.fillStyle = '#666';
     try {
-      (ctx as any).font = '24px sans-serif';
+      (ctx as any).font = 'bold 14px sans-serif';
     } catch (e) {
       console.warn('Font property not supported');
     }
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
 
     for (let i = 0; i <= 4; i++) {
       const height = this.minHeight + ((this.maxHeight - this.minHeight) / 4) * i;
       const y = this.config.height - this.config.padding - ((height - this.minHeight) / (this.maxHeight - this.minHeight)) * (this.config.height - 2 * this.config.padding);
-      ctx.fillText(height.toFixed(1), this.config.padding - 40, y - 12);
+      ctx.fillText(height.toFixed(1), this.config.padding - 15, y);
     }
   }
 
   private drawTideArea(ctx: CanvasRenderingContext2D): void {
     if (this.points.length === 0) return;
 
-    ctx.fillStyle = 'rgba(122, 197, 232, 0.3)';
+    // Create gradient fill for water area
+    const gradient = ctx.createLinearGradient(0, this.config.padding, 0, this.config.height - this.config.padding);
+    gradient.addColorStop(0, 'rgba(168, 216, 242, 0.7)');
+    gradient.addColorStop(0.5, 'rgba(122, 197, 232, 0.6)');
+    gradient.addColorStop(1, 'rgba(90, 184, 224, 0.5)');
+
+    ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.config.height - this.config.padding);
 
@@ -154,13 +160,31 @@ export class TideChartRenderer {
 
     ctx.strokeStyle = '#1a5490';
     ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
 
-    // Use simple line connections instead of quadratic curves for better compatibility
-    for (let i = 1; i < this.points.length; i++) {
-      const curr = this.points[i];
-      ctx.lineTo(curr.x, curr.y);
+    // Use smooth curve with quadratic bezier curves
+    if (this.points.length === 2) {
+      ctx.lineTo(this.points[1].x, this.points[1].y);
+    } else {
+      for (let i = 1; i < this.points.length; i++) {
+        const prev = this.points[i - 1];
+        const curr = this.points[i];
+        const next = this.points[i + 1];
+
+        const cpx = curr.x;
+        const cpy = curr.y;
+
+        if (i < this.points.length - 1) {
+          const nextX = (curr.x + next.x) / 2;
+          const nextY = (curr.y + next.y) / 2;
+          ctx.quadraticCurveTo(cpx, cpy, nextX, nextY);
+        } else {
+          ctx.quadraticCurveTo(cpx, cpy, curr.x, curr.y);
+        }
+      }
     }
 
     ctx.stroke();
@@ -189,7 +213,7 @@ export class TideChartRenderer {
   private drawLabels(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#666';
     try {
-      (ctx as any).font = '20px sans-serif';
+      (ctx as any).font = 'bold 12px sans-serif';
     } catch (e) {
       console.warn('Font property not supported');
     }
@@ -200,7 +224,7 @@ export class TideChartRenderer {
     for (let i = 0; i < this.points.length; i += labelStep) {
       const point = this.points[i];
       const timeLabel = point.time.slice(11, 16);
-      ctx.fillText(timeLabel, point.x, this.config.height - this.config.padding + 20);
+      ctx.fillText(timeLabel, point.x, this.config.height - this.config.padding + 12);
     }
   }
 }

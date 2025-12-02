@@ -6,7 +6,7 @@
 }
 
 .scrollContent {
-  padding: 24px;
+  padding: 20px 24px;
   flex: 1;
 }
 
@@ -14,9 +14,9 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
   color: #1a5490;
 }
 
@@ -27,9 +27,10 @@
 .mainTitle {
   text-align: center;
   color: #1a5490;
-  font-size: 28px;
-  font-weight: bold;
-  margin: 16px 0 24px 0;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 12px 0 20px 0;
+  letter-spacing: 0.5px;
 }
 
 .spacer {
@@ -39,7 +40,7 @@
 .cameraSection {
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 28px;
   gap: 12px;
 }
 
@@ -49,23 +50,23 @@
 }
 
 .cameraName {
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 12px;
   color: #1a5490;
-  font-size: 16px;
+  font-size: 14px;
   display: block;
 }
 
 .cameraImageContainer {
-  background: rgba(200, 230, 245, 0.4);
-  height: 180px;
+  background: rgba(200, 230, 245, 0.3);
+  height: 160px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid rgba(100, 180, 220, 0.3);
-  box-shadow: 0 4px 12px rgba(100, 150, 200, 0.1);
+  border: 1px solid rgba(100, 180, 220, 0.25);
+  box-shadow: 0 2px 8px rgba(100, 150, 200, 0.1);
 }
 
 .cameraImage {
@@ -77,12 +78,14 @@
 }
 
 .footer {
-  margin-top: 60px;
+  margin-top: 48px;
   width: 100%;
   text-align: center;
-  color: #6b9fb0;
-  font-size: 14px;
-  padding-bottom: 24px;
+  color: #7ba8c0;
+  font-size: 12px;
+  padding-bottom: 20px;
+  border-top: 1px solid rgba(100, 180, 220, 0.15);
+  padding-top: 20px;
 }
 
 .footerText {

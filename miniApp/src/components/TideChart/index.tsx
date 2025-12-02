@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { TideData } from '../../types/tide';
@@ -15,9 +15,27 @@ interface TideChartProps {
 const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
   const canvasId = useRef<string>(`tideChart-${Math.random().toString(36).substr(2, 9)}`).current;
   const renderTimeoutRef = useRef<NodeJS.Timeout>();
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 700, height: 280 });
 
   useEffect(() => {
-    if (!data.length) return;
+    // Get device width for responsive canvas sizing
+    try {
+      const systemInfo = Taro.getSystemInfoSync();
+      const deviceWidth = systemInfo.screenWidth || 375;
+      const containerWidth = deviceWidth - 48; // Account for padding
+      const containerHeight = Math.round(containerWidth * 0.4); // 40% aspect ratio
+
+      setCanvasDimensions({
+        width: containerWidth,
+        height: containerHeight,
+      });
+    } catch (error) {
+      console.warn('[TideChart] Could not get system info:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!data.length || !canvasDimensions) return;
 
     // Clear any previous timeout
     if (renderTimeoutRef.current) {
@@ -35,9 +53,9 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         }
 
         const renderer = new TideChartRenderer(data, {
-          width: 1200,
-          height: 480,
-          padding: 80,
+          width: canvasDimensions.width,
+          height: canvasDimensions.height,
+          padding: 50,
         });
 
         renderer.drawChart(ctx);
@@ -61,7 +79,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         clearTimeout(renderTimeoutRef.current);
       }
     };
-  }, [data, canvasId]);
+  }, [data, canvasId, canvasDimensions]);
 
   const highTides = data.filter(d => d.type === '高潮');
   const lowTides = data.filter(d => d.type === '低潮');
@@ -89,8 +107,12 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
       <Canvas
         className={styles.canvas}
         canvasId={canvasId}
-        width={1200}
-        height={480}
+        width={canvasDimensions.width}
+        height={canvasDimensions.height}
+        style={{
+          width: '100%',
+          height: `${canvasDimensions.height}px`,
+        }}
       />
     </View>
   );

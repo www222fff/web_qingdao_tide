@@ -1,0 +1,15 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "小岛的潮起潮落",
+  "description": "Qingdao Tide",
+  "appid": "wxf12ea2f5844ea358",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}

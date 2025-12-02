@@ -1,0 +1,141 @@
+.container {
+  background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 50%, #c5e0eb 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollContent {
+  padding: 24px;
+  flex: 1;
+}
+
+.titleSection {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #1a5490;
+}
+
+.titleLabel {
+  display: block;
+}
+
+.mainTitle {
+  text-align: center;
+  color: #1a5490;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 16px 0 24px 0;
+}
+
+.spacer {
+  height: 24px;
+}
+
+.cameraSection {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  gap: 12px;
+}
+
+.cameraCard {
+  flex: 1;
+  text-align: center;
+}
+
+.cameraName {
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #1a5490;
+  font-size: 16px;
+  display: block;
+}
+
+.cameraImageContainer {
+  background: rgba(200, 230, 245, 0.4);
+  height: 180px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(100, 180, 220, 0.3);
+  box-shadow: 0 4px 12px rgba(100, 150, 200, 0.1);
+}
+
+.cameraImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+}
+
+.footer {
+  margin-top: 60px;
+  width: 100%;
+  text-align: center;
+  color: #6b9fb0;
+  font-size: 14px;
+  padding-bottom: 24px;
+}
+
+.footerText {
+  display: block;
+}
+
+.loadingText {
+  display: block;
+  text-align: center;
+  padding: 50px 24px;
+  font-size: 16px;
+  color: #666;
+}
+
+.errorContainer {
+  margin: 40px 0;
+  padding: 24px;
+  background: #ffebee;
+  border: 2px solid #f44336;
+  border-radius: 8px;
+}
+
+.errorTitle {
+  display: block;
+  font-weight: bold;
+  color: #c62828;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.errorText {
+  display: block;
+  color: #d32f2f;
+  font-size: 14px;
+  margin-bottom: 12px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.errorHint {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .scrollContent {
+    padding: 12px;
+  }
+
+  .mainTitle {
+    font-size: 24px;
+  }
+}

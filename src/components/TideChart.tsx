@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import { TideData } from '../types/tide';
-import { Lunar } from 'lunar-javascript';
+import { Solar } from "lunar-javascript";
 
 interface TideChartProps {
     data: TideData[];
@@ -21,22 +21,19 @@ function getDateStr(timeStr: string) {
 
 function getLunarDateStr(solarDate: string): string {
     try {
-        // Parse solar date "2025-12-02"
         const [year, month, day] = solarDate.split('-').map(Number);
-        const lunar = Lunar.fromSolar(year, month, day);
-        if (!lunar) {
-            console.warn('Lunar conversion failed for date:', solarDate);
-            return '';
-        }
-        const lunarMonth = lunar.getMonthInChinese();
-        const lunarDay = lunar.getDayInChinese();
-        const result = `${lunarMonth}${lunarDay}`;
-        return result;
+        const solar = Solar.fromYmd(year, month, day);
+        const lunar = solar.getLunar();
+
+        const lunarMonth = lunar.getMonthInChinese(); // 例如 "十月"
+        const lunarDay = lunar.getDayInChinese();     // 例如 "十三"
+
+        return `${lunarMonth}月${lunarDay}`;
     } catch (e) {
-        console.error('Error converting lunar date:', solarDate, e);
         return '';
     }
 }
+
 
 // Create sand pattern with footprints
 function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height: number) {

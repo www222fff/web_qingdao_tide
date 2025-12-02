@@ -41,7 +41,8 @@
   display: flex;
   justify-content: space-between;
   margin-top: 28px;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .cameraCard {

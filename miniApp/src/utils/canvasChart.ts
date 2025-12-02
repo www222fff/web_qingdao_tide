@@ -160,13 +160,31 @@ export class TideChartRenderer {
 
     ctx.strokeStyle = '#1a5490';
     ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
 
-    // Use simple line connections instead of quadratic curves for better compatibility
-    for (let i = 1; i < this.points.length; i++) {
-      const curr = this.points[i];
-      ctx.lineTo(curr.x, curr.y);
+    // Use smooth curve with quadratic bezier curves
+    if (this.points.length === 2) {
+      ctx.lineTo(this.points[1].x, this.points[1].y);
+    } else {
+      for (let i = 1; i < this.points.length; i++) {
+        const prev = this.points[i - 1];
+        const curr = this.points[i];
+        const next = this.points[i + 1];
+
+        const cpx = curr.x;
+        const cpy = curr.y;
+
+        if (i < this.points.length - 1) {
+          const nextX = (curr.x + next.x) / 2;
+          const nextY = (curr.y + next.y) / 2;
+          ctx.quadraticCurveTo(cpx, cpy, nextX, nextY);
+        } else {
+          ctx.quadraticCurveTo(cpx, cpy, curr.x, curr.y);
+        }
+      }
     }
 
     ctx.stroke();

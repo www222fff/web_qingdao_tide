@@ -54,13 +54,28 @@ export interface TideDay {
 
 export const fetchTideData = async (): Promise<TideDay[]> => {
     try {
+        console.log('[FetchTideData] Starting API call...');
         const response = await getTideData();
-        console.log('Open-Meteo API response:', response); // 调试输出
-        if (!response || !response.hourly || !response.hourly.time || !response.hourly.sea_level_height_msl) {
-            throw new Error('No tidal data found');
+        console.log('[FetchTideData] API response received:', response);
+
+        if (!response) {
+            throw new Error('API returned no response');
         }
+        if (!response.hourly) {
+            throw new Error('API response missing hourly data');
+        }
+        if (!response.hourly.time) {
+            throw new Error('API response missing time data');
+        }
+        if (!response.hourly.sea_level_height_msl) {
+            throw new Error('API response missing sea_level_height_msl data');
+        }
+
         const times = response.hourly.time;
         const heights = response.hourly.sea_level_height_msl;
+
+        console.log('[FetchTideData] Processing', times.length, 'time entries');
+
         // 按天分组
         const daysMap: { [date: string]: { time: string; height: number }[] } = {};
         times.forEach((time: string, idx: number) => {
@@ -68,8 +83,11 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
             if (!daysMap[date]) daysMap[date] = [];
             daysMap[date].push({ time, height: heights[idx] });
         });
+
         // 取前7天
         const dayKeys = Object.keys(daysMap).slice(0, 7);
+        console.log('[FetchTideData] Grouped into', dayKeys.length, 'days');
+
         const result: TideDay[] = dayKeys.map(date => {
             const dayArr = daysMap[date];
             const dayHeights = dayArr.map(d => d.height);
@@ -85,9 +103,12 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
                 }))
             };
         });
+
+        console.log('[FetchTideData] Successfully processed', result.length, 'tide days');
         return result;
     } catch (error) {
-        console.error('Error fetching tidal data:', error);
+        const errMsg = error instanceof Error ? error.message : String(error);
+        console.error('[FetchTideData] Error:', errMsg, error);
         throw error;
     }
 };

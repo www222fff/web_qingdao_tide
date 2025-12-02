@@ -21,10 +21,14 @@ const IndexPage: React.FC = () => {
     useEffect(() => {
         const getTideData = async () => {
             try {
+                console.log('[IndexPage] Starting to fetch tide data...');
                 const data = await fetchTideData();
+                console.log('[IndexPage] Tide data received:', data.length, 'days');
                 setTideDays(data);
             } catch (err) {
-                setError('Failed to fetch tidal data');
+                const errMsg = err instanceof Error ? err.message : String(err);
+                console.error('[IndexPage] Fetch error:', errMsg);
+                setError(`Failed to fetch tidal data: ${errMsg}`);
             } finally {
                 setLoading(false);
             }
@@ -34,11 +38,14 @@ const IndexPage: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading tidal data...</div>;
+        return <div style={{padding: '20px', textAlign: 'center', color: '#666'}}>Loading tidal data...</div>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div style={{padding: '20px', margin: '20px', backgroundColor: '#ffebee', border: '2px solid #f44336', borderRadius: '8px', color: '#c62828', fontSize: '14px', whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}>
+            <div style={{fontWeight: 'bold', marginBottom: '8px'}}>Error loading tide data:</div>
+            {error}
+        </div>;
     }
 
     return (

@@ -4,11 +4,19 @@ const BASE_URL = 'https://marine-api.open-meteo.com/v1/marine';
 
 export const getTideData = async () => {
     try {
-        // 使用 sea_level_height_msl 参数获取潮汐高度数据
-        const response = await axios.get(`${BASE_URL}?latitude=36.0649&longitude=120.3804&hourly=sea_level_height_msl&timezone=Asia%2FSingapore&forecast_days=7`);
+        const url = `${BASE_URL}?latitude=36.0649&longitude=120.3804&hourly=sea_level_height_msl&timezone=Asia%2FSingapore&forecast_days=7`;
+        console.log('[TideAPI] Requesting:', url);
+
+        const response = await axios.get(url, {
+            timeout: 10000, // 10秒超时
+        });
+
+        console.log('[TideAPI] Success:', response.status, response.data);
         return response.data;
     } catch (error) {
-        console.error('Error fetching tidal data:', error);
+        const errMsg = error instanceof Error ? error.message : String(error);
+        console.error('[TideAPI] Failed:', errMsg);
+        console.error('[TideAPI] Full error:', error);
         throw error;
     }
 };

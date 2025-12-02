@@ -20,11 +20,14 @@ const IndexPage: React.FC = () => {
   useEffect(() => {
     const getTideData = async () => {
       try {
+        console.error('[IndexPage] Fetching tide data...');
         const data = await fetchTideData();
+        console.error('[IndexPage] Received', data.length, 'days of data');
         setTideDays(data);
       } catch (err) {
-        setError('Failed to fetch tidal data');
-        console.error('Error fetching tidal data:', err);
+        const errMsg = err instanceof Error ? err.message : String(err);
+        console.error('[IndexPage] Error:', errMsg);
+        setError(errMsg);
       } finally {
         setLoading(false);
       }
@@ -44,7 +47,15 @@ const IndexPage: React.FC = () => {
   if (error) {
     return (
       <View className={styles.container}>
-        <Text className={styles.errorText}>{error}</Text>
+        <View className={styles.errorContainer}>
+          <Text className={styles.errorTitle}>Error Loading Tidal Data</Text>
+          <Text className={styles.errorText}>{error}</Text>
+          <Text className={styles.errorHint}>
+            Make sure: 1. Device has internet connection{'\n'}
+            2. Open-Meteo domain is whitelisted{'\n'}
+            3. Try again in a few seconds
+          </Text>
+        </View>
       </View>
     );
   }

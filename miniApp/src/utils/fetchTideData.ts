@@ -43,12 +43,27 @@ function getTideType(dayHeights: number[]): string {
 
 export const fetchTideData = async (): Promise<TideDay[]> => {
   try {
+    console.error('[fetchTideData] Starting...');
     const response = await getTideData();
-    if (!response || !response.hourly || !response.hourly.time || !response.hourly.sea_level_height_msl) {
-      throw new Error('No tidal data found');
+    console.error('[fetchTideData] Got response:', response);
+
+    if (!response) {
+      throw new Error('Response is null/undefined');
     }
+    if (!response.hourly) {
+      throw new Error('Response missing hourly field');
+    }
+    if (!response.hourly.time) {
+      throw new Error('Response missing hourly.time array');
+    }
+    if (!response.hourly.sea_level_height_msl) {
+      throw new Error('Response missing hourly.sea_level_height_msl array');
+    }
+
     const times = response.hourly.time;
     const heights = response.hourly.sea_level_height_msl;
+
+    console.error('[fetchTideData] Processing', times.length, 'time entries');
 
     const daysMap: { [date: string]: { time: string; height: number }[] } = {};
     times.forEach((time: string, idx: number) => {
@@ -58,6 +73,8 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
     });
 
     const dayKeys = Object.keys(daysMap).slice(0, 7);
+    console.error('[fetchTideData] Grouped into', dayKeys.length, 'days');
+
     const result: TideDay[] = dayKeys.map(date => {
       const dayArr = daysMap[date];
       const dayHeights = dayArr.map(d => d.height);
@@ -74,9 +91,11 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
       };
     });
 
+    console.error('[fetchTideData] Success, processed', result.length, 'days');
     return result;
   } catch (error) {
-    console.error('Error fetching tidal data:', error);
-    throw error;
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('[fetchTideData] Error:', errMsg);
+    throw new Error(`Data processing error: ${errMsg}`);
   }
 };

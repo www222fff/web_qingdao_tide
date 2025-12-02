@@ -82,6 +82,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         className={styles.canvas}
         canvasId={canvasId}
         type="2d"
+        style={{ width: '100%', height: '300px' }}
       />
     </View>
   );

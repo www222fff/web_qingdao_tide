@@ -88,11 +88,11 @@ export class TideChartRenderer {
   }
 
   private drawGridLines(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = 'rgba(200, 200, 200, 0.1)';
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.08)';
     ctx.lineWidth = 1;
 
     const innerHeight = this.config.height - 2 * this.config.padding;
-    const gridCount = 4;
+    const gridCount = 5;
 
     for (let i = 1; i < gridCount; i++) {
       const y = this.config.padding + (innerHeight / gridCount) * i;

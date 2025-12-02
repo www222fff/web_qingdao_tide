@@ -64,15 +64,22 @@ export class TideChartRenderer {
   }
 
   drawChart(ctx: CanvasRenderingContext2D): void {
-    this.drawBackground(ctx);
-    if (this.config.gridLines) {
-      this.drawGridLines(ctx);
+    try {
+      console.log('Starting chart render with config:', this.config);
+      this.drawBackground(ctx);
+      if (this.config.gridLines) {
+        this.drawGridLines(ctx);
+      }
+      this.drawAxes(ctx);
+      this.drawTideArea(ctx);
+      this.drawCurve(ctx);
+      this.drawPoints(ctx);
+      this.drawLabels(ctx);
+      console.log('Chart render completed successfully');
+    } catch (err) {
+      console.error('Error during chart render:', err);
+      throw err;
     }
-    this.drawAxes(ctx);
-    this.drawTideArea(ctx);
-    this.drawCurve(ctx);
-    this.drawPoints(ctx);
-    this.drawLabels(ctx);
   }
 
   private drawBackground(ctx: CanvasRenderingContext2D): void {
@@ -111,14 +118,18 @@ export class TideChartRenderer {
     ctx.stroke();
 
     ctx.fillStyle = '#666';
-    (ctx as any).font = '12px sans-serif';
+    try {
+      (ctx as any).font = '24px sans-serif';
+    } catch (e) {
+      console.warn('Font property not supported');
+    }
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
     for (let i = 0; i <= 4; i++) {
       const height = this.minHeight + ((this.maxHeight - this.minHeight) / 4) * i;
       const y = this.config.height - this.config.padding - ((height - this.minHeight) / (this.maxHeight - this.minHeight)) * (this.config.height - 2 * this.config.padding);
-      ctx.fillText(height.toFixed(1), this.config.padding - 20, y - 6);
+      ctx.fillText(height.toFixed(1), this.config.padding - 40, y - 12);
     }
   }
 
@@ -177,7 +188,11 @@ export class TideChartRenderer {
 
   private drawLabels(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#666';
-    (ctx as any).font = '11px sans-serif';
+    try {
+      (ctx as any).font = '20px sans-serif';
+    } catch (e) {
+      console.warn('Font property not supported');
+    }
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
@@ -185,7 +200,7 @@ export class TideChartRenderer {
     for (let i = 0; i < this.points.length; i += labelStep) {
       const point = this.points[i];
       const timeLabel = point.time.slice(11, 16);
-      ctx.fillText(timeLabel, point.x, this.config.height - this.config.padding + 10);
+      ctx.fillText(timeLabel, point.x, this.config.height - this.config.padding + 20);
     }
   }
 }

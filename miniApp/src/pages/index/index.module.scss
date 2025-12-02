@@ -1,10 +1,13 @@
 .container {
   background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 50%, #c5e0eb 100%);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .scrollContent {
   padding: 24px;
+  flex: 1;
 }
 
 .titleSection {

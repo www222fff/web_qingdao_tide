@@ -220,7 +220,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
 
     return (
         <div style={{
-            margin: '32px 0',
+            margin: '16px 0',
             padding: 12,
             border: '1px solid rgba(100, 180, 220, 0.3)',
             borderRadius: 8,

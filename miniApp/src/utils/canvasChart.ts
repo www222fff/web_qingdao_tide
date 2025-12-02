@@ -111,7 +111,7 @@ export class TideChartRenderer {
     ctx.stroke();
 
     ctx.fillStyle = '#666';
-    ctx.font = '12px Arial';
+    ctx.fontSize = 12;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 

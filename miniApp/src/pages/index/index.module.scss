@@ -40,7 +40,7 @@
 .cameraSection {
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 28px;
   gap: 12px;
 }
 
@@ -50,23 +50,23 @@
 }
 
 .cameraName {
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 12px;
   color: #1a5490;
-  font-size: 16px;
+  font-size: 14px;
   display: block;
 }
 
 .cameraImageContainer {
-  background: rgba(200, 230, 245, 0.4);
-  height: 180px;
+  background: rgba(200, 230, 245, 0.3);
+  height: 160px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid rgba(100, 180, 220, 0.3);
-  box-shadow: 0 4px 12px rgba(100, 150, 200, 0.1);
+  border: 1px solid rgba(100, 180, 220, 0.25);
+  box-shadow: 0 2px 8px rgba(100, 150, 200, 0.1);
 }
 
 .cameraImage {

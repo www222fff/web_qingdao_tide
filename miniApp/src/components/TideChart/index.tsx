@@ -14,14 +14,23 @@ interface TideChartProps {
 
 const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
   const canvasId = useRef<string>(`tideChart-${Math.random().toString(36).substr(2, 9)}`).current;
+  const renderTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (!data.length) return;
 
-    const drawChart = async () => {
+    // Clear any previous timeout
+    if (renderTimeoutRef.current) {
+      clearTimeout(renderTimeoutRef.current);
+    }
+
+    const drawChart = () => {
       try {
         const ctx = Taro.createCanvasContext(canvasId);
-        if (!ctx) return;
+        if (!ctx) {
+          console.warn('Canvas context not available');
+          return;
+        }
 
         const renderer = new TideChartRenderer(data, {
           width: 600,
@@ -32,10 +41,18 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         renderer.drawChart(ctx);
         ctx.draw();
       } catch (error) {
+        console.error('Chart rendering error:', error);
       }
     };
 
-    drawChart();
+    // Delay to ensure canvas is mounted and ready
+    renderTimeoutRef.current = setTimeout(drawChart, 300);
+
+    return () => {
+      if (renderTimeoutRef.current) {
+        clearTimeout(renderTimeoutRef.current);
+      }
+    };
   }, [data, canvasId]);
 
   const highTides = data.filter(d => d.type === '高潮');
@@ -65,6 +82,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         className={styles.canvas}
         canvasId={canvasId}
         type="2d"
+        style={{ width: '100%', height: '300px' }}
       />
     </View>
   );

@@ -111,7 +111,7 @@ export class TideChartRenderer {
     ctx.stroke();
 
     ctx.fillStyle = '#666';
-    ctx.font = '12px Arial';
+    (ctx as any).font = '12px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
@@ -146,18 +146,10 @@ export class TideChartRenderer {
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
 
+    // Use simple line connections instead of quadratic curves for better compatibility
     for (let i = 1; i < this.points.length; i++) {
-      const prev = this.points[i - 1];
       const curr = this.points[i];
-      const cpx = (prev.x + curr.x) / 2;
-      const cpy = (prev.y + curr.y) / 2;
-      ctx.quadraticCurveTo(prev.x, prev.y, cpx, cpy);
-    }
-
-    if (this.points.length > 1) {
-      const last = this.points[this.points.length - 1];
-      const prev = this.points[this.points.length - 2];
-      ctx.quadraticCurveTo(prev.x, prev.y, last.x, last.y);
+      ctx.lineTo(curr.x, curr.y);
     }
 
     ctx.stroke();
@@ -185,7 +177,7 @@ export class TideChartRenderer {
 
   private drawLabels(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#666';
-    ctx.font = '11px Arial';
+    (ctx as any).font = '11px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 

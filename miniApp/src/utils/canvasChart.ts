@@ -136,7 +136,13 @@ export class TideChartRenderer {
   private drawTideArea(ctx: CanvasRenderingContext2D): void {
     if (this.points.length === 0) return;
 
-    ctx.fillStyle = 'rgba(122, 197, 232, 0.3)';
+    // Create gradient fill for water area
+    const gradient = ctx.createLinearGradient(0, this.config.padding, 0, this.config.height - this.config.padding);
+    gradient.addColorStop(0, 'rgba(168, 216, 242, 0.7)');
+    gradient.addColorStop(0.5, 'rgba(122, 197, 232, 0.6)');
+    gradient.addColorStop(1, 'rgba(90, 184, 224, 0.5)');
+
+    ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.config.height - this.config.padding);
 

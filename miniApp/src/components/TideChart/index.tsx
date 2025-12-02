@@ -24,29 +24,37 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
       clearTimeout(renderTimeoutRef.current);
     }
 
-    const drawChart = () => {
+    const drawChart = async () => {
       try {
-        const ctx = Taro.createCanvasContext(canvasId);
+        // For Taro 4 with 2D canvas, use the proper API
+        const ctx = await Taro.createCanvasContext(canvasId);
+
         if (!ctx) {
           console.warn('Canvas context not available');
           return;
         }
 
         const renderer = new TideChartRenderer(data, {
-          width: 600,
-          height: 300,
-          padding: 40,
+          width: 1200,
+          height: 600,
+          padding: 80,
         });
 
         renderer.drawChart(ctx);
-        ctx.draw();
+
+        // Use draw() for Taro canvas context
+        if (typeof ctx.draw === 'function') {
+          ctx.draw();
+        }
+
+        console.log('Chart rendered successfully');
       } catch (error) {
         console.error('Chart rendering error:', error);
       }
     };
 
     // Delay to ensure canvas is mounted and ready
-    renderTimeoutRef.current = setTimeout(drawChart, 300);
+    renderTimeoutRef.current = setTimeout(drawChart, 500);
 
     return () => {
       if (renderTimeoutRef.current) {
@@ -83,6 +91,8 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         canvasId={canvasId}
         type="2d"
         style={{ width: '100%', height: '300px' }}
+        width={1200}
+        height={600}
       />
     </View>
   );

@@ -1,7 +1,10 @@
 .container {
-  padding: 24px;
   background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 50%, #c5e0eb 100%);
   min-height: 100vh;
+}
+
+.scrollContent {
+  padding: 24px;
 }
 
 .titleSection {
@@ -125,7 +128,7 @@
 }
 
 @media (max-width: 600px) {
-  .container {
+  .scrollContent {
     padding: 12px;
   }
 

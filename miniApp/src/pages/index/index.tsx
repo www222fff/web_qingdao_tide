@@ -24,6 +24,7 @@ const IndexPage: React.FC = () => {
         setTideDays(data);
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
+        console.error('[IndexPage] Error:', errMsg);
         setError(errMsg);
       } finally {
         setLoading(false);
@@ -58,8 +59,8 @@ const IndexPage: React.FC = () => {
   }
 
   return (
-    <ScrollView scrollY className={styles.scrollContainer}>
-      <View className={styles.container}>
+    <ScrollView className={styles.container} scrollY>
+      <View className={styles.scrollContent}>
         <View className={styles.titleSection}>
           <Text className={styles.titleLabel}>Tide Height (m)</Text>
         </View>

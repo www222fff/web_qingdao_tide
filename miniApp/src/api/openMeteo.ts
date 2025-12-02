@@ -17,7 +17,7 @@ export const getTideData = async (): Promise<TideResponse> => {
     console.log('[getTideData] Response received - statusCode:', response.statusCode);
 
     if (response.statusCode === 200 && response.data) {
-      console.error('[getTideData] Success, data keys:', Object.keys(response.data));
+      console.log('[getTideData] Success, data keys:', Object.keys(response.data));
       return response.data;
     } else {
       throw new Error(`API returned status ${response.statusCode}`);

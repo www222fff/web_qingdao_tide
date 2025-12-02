@@ -36,7 +36,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
 
         const renderer = new TideChartRenderer(data, {
           width: 1200,
-          height: 600,
+          height: 480,
           padding: 80,
         });
 

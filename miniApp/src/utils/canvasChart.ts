@@ -88,11 +88,11 @@ export class TideChartRenderer {
   }
 
   private drawGridLines(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = 'rgba(200, 200, 200, 0.1)';
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.08)';
     ctx.lineWidth = 1;
 
     const innerHeight = this.config.height - 2 * this.config.padding;
-    const gridCount = 4;
+    const gridCount = 5;
 
     for (let i = 1; i < gridCount; i++) {
       const y = this.config.padding + (innerHeight / gridCount) * i;
@@ -117,20 +117,47 @@ export class TideChartRenderer {
     ctx.lineTo(this.config.padding, this.config.height - this.config.padding);
     ctx.stroke();
 
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#999';
     try {
-      (ctx as any).font = 'bold 14px sans-serif';
+      (ctx as any).font = '12px sans-serif';
     } catch (e) {
       console.warn('Font property not supported');
     }
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
 
-    for (let i = 0; i <= 4; i++) {
-      const height = this.minHeight + ((this.maxHeight - this.minHeight) / 4) * i;
-      const y = this.config.height - this.config.padding - ((height - this.minHeight) / (this.maxHeight - this.minHeight)) * (this.config.height - 2 * this.config.padding);
-      ctx.fillText(height.toFixed(1), this.config.padding - 15, y);
+    const heightRange = this.maxHeight - this.minHeight;
+    const step = this.calculateNiceStep(heightRange / 5);
+    let tickValue = Math.ceil(this.minHeight / step) * step;
+
+    while (tickValue <= this.maxHeight) {
+      const yPercent = (tickValue - this.minHeight) / heightRange;
+      const y = this.config.height - this.config.padding - yPercent * (this.config.height - 2 * this.config.padding);
+
+      if (y > this.config.padding && y < this.config.height - this.config.padding) {
+        ctx.fillText(tickValue.toFixed(1), this.config.padding - 12, y);
+      }
+
+      tickValue += step;
     }
+  }
+
+  private calculateNiceStep(approximateStep: number): number {
+    const base = Math.floor(Math.log10(approximateStep));
+    const normalized = approximateStep / Math.pow(10, base);
+
+    let niceStep: number;
+    if (normalized < 1.5) {
+      niceStep = 1;
+    } else if (normalized < 3) {
+      niceStep = 2;
+    } else if (normalized < 7) {
+      niceStep = 5;
+    } else {
+      niceStep = 10;
+    }
+
+    return niceStep * Math.pow(10, base);
   }
 
   private drawTideArea(ctx: CanvasRenderingContext2D): void {
@@ -193,20 +220,16 @@ export class TideChartRenderer {
   private drawPoints(ctx: CanvasRenderingContext2D): void {
     for (const point of this.points) {
       if (point.type === '高潮') {
-        ctx.fillStyle = '#ff4444';
+        ctx.fillStyle = 'rgba(255, 68, 68, 0.3)';
       } else if (point.type === '低潮') {
-        ctx.fillStyle = '#00cc00';
+        ctx.fillStyle = 'rgba(0, 204, 0, 0.3)';
       } else {
-        ctx.fillStyle = '#2C7FD9';
+        ctx.fillStyle = 'rgba(200, 200, 200, 0.4)';
       }
 
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 6, 0, Math.PI * 2);
+      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
       ctx.fill();
-
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
     }
   }
 

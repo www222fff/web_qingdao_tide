@@ -41,7 +41,8 @@
   display: flex;
   justify-content: space-between;
   margin-top: 28px;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .cameraCard {
@@ -59,7 +60,7 @@
 
 .cameraImageContainer {
   background: rgba(200, 230, 245, 0.3);
-  height: 160px;
+  aspect-ratio: 1;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -135,10 +136,20 @@
 
 @media (max-width: 600px) {
   .scrollContent {
-    padding: 12px;
+    padding: 12px 16px;
   }
 
   .mainTitle {
-    font-size: 24px;
+    font-size: 20px;
+  }
+
+  .cameraSection {
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .cameraName {
+    font-size: 12px;
+    margin-bottom: 8px;
   }
 }

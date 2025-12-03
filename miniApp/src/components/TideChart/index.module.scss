@@ -1,57 +1,92 @@
+/* index.module.scss */
+
+// 变量定义
+$primary-color: #1a5490;
+$radius-lg: 16px;
+
 .container {
   margin: 16px 0;
-  padding: 16px;
-  border: 1px solid rgba(100, 180, 220, 0.2);
-  border-radius: 12px;
+  // 增加内边距，适应大字体布局
+  padding: 24px 20px; 
+  border-radius: $radius-lg;
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(100, 150, 200, 0.12);
+  // 多层次阴影，营造悬浮感
+  box-shadow: 0 4px 12px rgba(26, 84, 144, 0.05), 
+              0 10px 24px rgba(26, 84, 144, 0.04);
+  position: relative;
+  overflow: hidden;
   box-sizing: border-box;
-  z-index: auto;
 }
 
 .header {
-  font-weight: 600;
-  font-size: 16px;
   display: flex;
   align-items: center;
-  color: #1a5490;
+  justify-content: space-between;
   margin-bottom: 12px;
-  gap: 8px;
 }
 
 .date {
-  flex: 1;
+  // 大字体：日期
+  font-size: 20px; 
+  font-weight: 800;
+  color: $primary-color;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.lunarDate {
+  // 小字体：农历
+  font-size: 20px;
+  font-weight: 500;
+  color: #7f9bb3;
 }
 
 .tideType {
-  margin-left: 8px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 600;
-  color: #1a5490;
-}
-
-.tideInfo {
-  margin: 12px 0;
-  font-size: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.highTide {
-  color: #d32f2f;
-  font-weight: 600;
-}
-
-.lowTide {
-  color: #388e3c;
-  font-weight: 600;
+  color: #fff;
+  // 漂亮的渐变徽章
+  background: linear-gradient(90deg, #4aa3df, #1a5490);
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(26, 84, 144, 0.2);
 }
 
 .canvas {
   display: block;
   width: 100%;
+  margin: 12px 0;
+  // z-index: 1; 
+}
+
+.tideInfo {
+  display: flex;
+  justify-content: space-around;
   margin-top: 12px;
-  margin-bottom: 0;
-  box-sizing: border-box;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+}
+
+.highTide, .lowTide {
+  // 大字体：底部汇总信息
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    margin-right: 8px;
+    font-size: 20px;
+  }
+}
+
+.highTide {
+  color: #e53935;
+  &::before { content: '▲'; }
+}
+
+.lowTide {
+  color: #00897b;
+  &::before { content: '▼'; }
 }

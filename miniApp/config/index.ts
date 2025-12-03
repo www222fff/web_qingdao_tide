@@ -38,13 +38,15 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
 
           }
         },
+        // --- 重点修改了这里 ---
         cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: true, // 必须改为 true，否则 import styles from ... 获取不到对象
           config: {
-            namingPattern: 'module', // 转换模式，取值为 global/module
+            namingPattern: 'module', // 只有文件名带 .module.scss 的文件才会开启模块化
             generateScopedName: '[name]__[local]___[hash:base64:5]'
           }
         }
+        // --------------------
       },
     },
     h5: {
@@ -61,20 +63,22 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
           enable: true,
           config: {}
         },
+        // --- 建议这里也改为 true，保持 H5 端行为一致 ---
         cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: true, 
           config: {
-            namingPattern: 'module', // 转换模式，取值为 global/module
+            namingPattern: 'module',
             generateScopedName: '[name]__[local]___[hash:base64:5]'
           }
         }
+        // ------------------------------------------
       },
     },
     rn: {
       appName: 'taroDemo',
       postcss: {
         cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: false, // RN 通常不支持这种方式，保持 false 即可
         }
       }
     }

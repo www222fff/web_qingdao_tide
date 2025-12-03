@@ -73,7 +73,6 @@ export class TideChartRenderer {
       this.drawAxes(ctx);
       this.drawTideArea(ctx);
       this.drawCurve(ctx);
-      this.drawPoints(ctx);
       this.drawLabels(ctx);
       console.log('Chart render completed successfully');
     } catch (err) {
@@ -218,19 +217,7 @@ export class TideChartRenderer {
   }
 
   private drawPoints(ctx: CanvasRenderingContext2D): void {
-    for (const point of this.points) {
-      if (point.type === '高潮') {
-        ctx.fillStyle = 'rgba(255, 68, 68, 0.3)';
-      } else if (point.type === '低潮') {
-        ctx.fillStyle = 'rgba(0, 204, 0, 0.3)';
-      } else {
-        ctx.fillStyle = 'rgba(200, 200, 200, 0.4)';
-      }
-
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    // 已去除小圆圈绘制逻辑
   }
 
   private drawLabels(ctx: CanvasRenderingContext2D): void {

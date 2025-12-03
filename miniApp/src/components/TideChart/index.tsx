@@ -23,7 +23,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
       const systemInfo = Taro.getSystemInfoSync();
       const deviceWidth = systemInfo.screenWidth || 375;
       const containerWidth = deviceWidth - 48; // Account for padding
-      const containerHeight = Math.round(containerWidth * 0.4); // 40% aspect ratio
+      const containerHeight = Math.round(containerWidth * 0.7); // 70% aspect ratio，提升纵坐标高度
 
       setCanvasDimensions({
         width: containerWidth,

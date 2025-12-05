@@ -74,6 +74,33 @@ export class TideChartRenderer {
       this.drawTideArea(ctx);
       this.drawCurve(ctx);
       this.drawLabels(ctx);
+
+      // 画今天的时间线
+      if (typeof window !== 'undefined' && this.data.length > 0) {
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const firstDate = this.data[0].time.slice(0, 10);
+        if (firstDate === todayStr) {
+          const currentHour = now.getHours() + now.getMinutes() / 60;
+          const innerWidth = this.config.width - 2 * this.config.padding;
+          const currentX = this.config.padding + (currentHour / 24) * innerWidth;
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(currentX, this.config.padding);
+          ctx.lineTo(currentX, this.config.height - this.config.padding);
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = '#f57c00';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillStyle = '#ef6c00';
+          ctx.textAlign = 'center';
+          ctx.fillText('现在', currentX, this.config.padding - 8);
+          ctx.restore();
+        }
+      }
+
       console.log('Chart render completed successfully');
     } catch (err) {
       console.error('Error during chart render:', err);

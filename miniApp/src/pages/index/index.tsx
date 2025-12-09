@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
+import Taro, { useShareAppMessage, useShareTimeline } from '@tarojs/taro';
 import { fetchTideData } from '../../utils/fetchTideData';
 import { TideDay } from '../../types/tide';
 import TideChart from '../../components/TideChart';
@@ -16,6 +17,24 @@ const IndexPage: React.FC = () => {
   const [tideDays, setTideDays] = useState<TideDay[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Share to friends (分享给朋友)
+  useShareAppMessage(() => {
+    return {
+      title: '青岛潮汐数据 - 查看实时潮汐信息',
+      desc: '实时查看青岛地区潮汐数据，包含高潮低潮时间及潮汐类型',
+      path: '/pages/index/index',
+    };
+  });
+
+  // Share to Moments/Timeline (分享到朋友圈)
+  useShareTimeline(() => {
+    return {
+      title: '青岛潮汐数据 - 查看实时潮汐信息',
+      query: 'from=timeline',
+      imageUrl: '/images/shilaoren.jpg',
+    };
+  });
 
   useEffect(() => {
     const getTideData = async () => {

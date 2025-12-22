@@ -1,11 +1,9 @@
 import Taro from '@tarojs/taro';
 import { TideResponse } from '../types/tide';
 
-const BASE_URL = 'https://marine-api.open-meteo.com/v1/marine';
+const url = 'https://tide.takeanything.store/api/tide';
 
 export const getTideData = async (): Promise<TideResponse> => {
-  const url = `${BASE_URL}?latitude=36.0649&longitude=120.3804&hourly=sea_level_height_msl&timezone=Asia%2FSingapore&forecast_days=7`;
-
   try {
     const response = await Taro.request<TideResponse>({
       url,

@@ -54,7 +54,7 @@ export default {
         );
       }
 
-      return json(cached);
+      return json(cached.data);
     }
 
     return json({ message: 'Not Found' }, 404);

@@ -1,0 +1,10 @@
+name = "tide-worker"
+main = "src/index.ts"
+compatibility_date = "2025-11-13"
+
+[[kv_namespaces]]
+binding = "MY_KV"
+id = "1dad9799fd624021927f69ffd84faa00"
+
+[triggers]
+crons = ["0 0 * * *"]

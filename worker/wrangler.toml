@@ -7,4 +7,4 @@ binding = "MY_KV"
 id = "1dad9799fd624021927f69ffd84faa00"
 
 [triggers]
-crons = ["0 0 * * *"]
+crons = ["0 16 * * *"]

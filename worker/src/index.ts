@@ -15,12 +15,23 @@ async function getTideData() {
     `&timezone=Asia%2FSingapore` +
     `&forecast_days=7`;
 
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Tide API failed: ${res.status}`);
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Tide API failed: ${res.status}`);
+      }
+      return res.json();
+    } catch (e) {
+      lastError = e;
+      if (attempt < 3) {
+        // 5分钟间隔重试
+        await new Promise((resolve) => setTimeout(resolve, 5 * 60 * 1000));
+      }
+    }
   }
-
-  return res.json();
+  throw lastError;
 }
 
 /**

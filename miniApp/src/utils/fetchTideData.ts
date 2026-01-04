@@ -33,7 +33,8 @@ function getMoonFactor(dateStr: string): number {
   const phase = diff / LUNAR_CYCLE;
   const angle = phase * 2 * Math.PI;
 
-  return 1 + 0.25 * Math.cos(angle);
+  // 修正因子最小为1，只放大不缩小
+  return Math.max(1, 1 + 0.25 * Math.cos(angle));
 }
 
 /* ================= 近地点 / 远地点修正 ================= */
@@ -49,21 +50,30 @@ function getPerigeeFactor(dateStr: string): number {
   const phase = diff / PERIGEE_CYCLE;
   const angle = phase * 2 * Math.PI;
 
-  return 1 + 0.05 * Math.cos(angle);
+  // 修正因子最小为1，只放大不缩小
+  return Math.max(1, 1 + 0.05 * Math.cos(angle));
 }
 
 /* ================= 汛型判断（终极版） ================= */
 function getTideType(dateStr: string, dayHeights: number[]): string {
   // 直接用最大-最小作为潮差，更贴合实际
-  let tideRange = Math.max(...dayHeights) - Math.min(...dayHeights);
+  const max = Math.max(...dayHeights);
+  const min = Math.min(...dayHeights);
+  let tideRange = max - min;
+  console.log('[getTideType] max:', max, 'min:', min, '初始潮差:', tideRange);
 
   // 🌙 朔望修正
-  tideRange *= getMoonFactor(dateStr);
+  const moonFactor = getMoonFactor(dateStr);
+  console.log('[getTideType] moonFactor:', moonFactor);
+  tideRange *= moonFactor;
 
   // 🌓 近地点修正
-  tideRange *= getPerigeeFactor(dateStr);
+  const perigeeFactor = getPerigeeFactor(dateStr);
+  console.log('[getTideType] perigeeFactor:', perigeeFactor);
+  tideRange *= perigeeFactor;
 
   tideRange = +tideRange.toFixed(2);
+  console.log('[getTideType] 最终潮差:', tideRange);
 
   // 分级标准调整，更贴合青岛实际
   if (tideRange >= 4.2) return `超级大活汛 (潮差${tideRange}m) 🔥`;

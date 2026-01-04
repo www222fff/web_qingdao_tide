@@ -54,25 +54,8 @@ function getPerigeeFactor(dateStr: string): number {
 
 /* ================= 汛型判断（终极版） ================= */
 function getTideType(dateStr: string, dayHeights: number[]): string {
-  const { high, low } = findExtrema(dayHeights);
-
-  let avgHigh: number;
-  let avgLow: number;
-
-  if (high.length >= 1 && low.length >= 1) {
-    // ✅ 优先用真实高潮 / 低潮
-    const highs = high.map(i => dayHeights[i]);
-    const lows = low.map(i => dayHeights[i]);
-
-    avgHigh = highs.reduce((a, b) => a + b, 0) / highs.length;
-    avgLow = lows.reduce((a, b) => a + b, 0) / lows.length;
-  } else {
-    // 🔻 退化方案（国家预报也会这么干）
-    avgHigh = Math.max(...dayHeights);
-    avgLow = Math.min(...dayHeights);
-  }
-
-  let tideRange = avgHigh - avgLow;
+  // 直接用最大-最小作为潮差，更贴合实际
+  let tideRange = Math.max(...dayHeights) - Math.min(...dayHeights);
 
   // 🌙 朔望修正
   tideRange *= getMoonFactor(dateStr);
@@ -82,12 +65,13 @@ function getTideType(dateStr: string, dayHeights: number[]): string {
 
   tideRange = +tideRange.toFixed(2);
 
-  if (tideRange >= 4.3) return `超级大活汛 (潮差${tideRange}m) 🔥`;
-  if (tideRange >= 4.0) return `大活汛 (潮差${tideRange}m) ⚡`;
-  if (tideRange >= 3.5) return `中大汛 (潮差${tideRange}m)`;
-  if (tideRange >= 3.0) return `中汛 (潮差${tideRange}m)`;
-  if (tideRange >= 2.5) return `小汛 (潮差${tideRange}m)`;
-  if (tideRange >= 2.0) return `小死汛 (潮差${tideRange}m) 💤`;
+  // 分级标准调整，更贴合青岛实际
+  if (tideRange >= 4.2) return `超级大活汛 (潮差${tideRange}m) 🔥`;
+  if (tideRange >= 3.7) return `大活汛 (潮差${tideRange}m) ⚡`;
+  if (tideRange >= 3.3) return `中大汛 (潮差${tideRange}m)`;
+  if (tideRange >= 2.8) return `中汛 (潮差${tideRange}m)`;
+  if (tideRange >= 2.3) return `小汛 (潮差${tideRange}m)`;
+  if (tideRange >= 1.8) return `小死汛 (潮差${tideRange}m) 💤`;
   return `死汛 (潮差${tideRange}m) 😴`;
 }
 
